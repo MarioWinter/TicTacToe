@@ -10,6 +10,13 @@ let fields = [
     null,
 ];
 
+let winPatterns = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertikal
+    [0, 4, 8], [2, 4, 6] // Diagonal
+];
+
+
 let currentPlayer = 'circle'; // Startspieler
 
 function init() {
@@ -17,21 +24,15 @@ function init() {
 }
 
 
-function checkWin() {
-    const winPatterns = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertikal
-        [0, 4, 8], [2, 4, 6] // Diagonal
-    ];
-
-    for (const pattern of winPatterns) {
-        const [a, b, c] = pattern;
-        if (fields[a] && fields[a] === fields[b] && fields[a] === fields[c]) {
-            return pattern;
-        }
-    }
-    return null;
-}
+// function checkWin() {
+//     for (const pattern of winPatterns) {
+//         const [a, b, c] = pattern;
+//         if (fields[a] && fields[a] === fields[b] && fields[a] === fields[c]) {
+//             return pattern;
+//         }
+//     }
+//     return null;
+// }
 
 function drawWinLine(pattern) {
     if (pattern) {
@@ -64,26 +65,56 @@ function drawWinLine(pattern) {
 }
 
 
-function handleCellClick(index) {
-    // Überprüfen, ob das Feld bereits belegt ist
-    if (fields[index] === null) {
-        // Das Feld ist frei, wir setzen den Spielstein und den HTML-Code
-        fields[index] = currentPlayer;
-        const cell = document.getElementById(`cell-${index}`);
-        cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVGCode() : generateCrossSVGCode();
+// function handleCellClick(index) {
+//     // Überprüfen, ob das Feld bereits belegt ist
+//     if (fields[index] === null) {
+//         // Das Feld ist frei, wir setzen den Spielstein und den HTML-Code
+//         fields[index] = currentPlayer;
+//         const cell = document.getElementById(`cell-${index}`);
+//         cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVGCode() : generateCrossSVGCode();
         
-        // Entfernen des onclick-Attributs, um weitere Klicks zu verhindern
-        cell.removeAttribute('onclick');
+//         // Entfernen des onclick-Attributs, um weitere Klicks zu verhindern
+//         cell.removeAttribute('onclick');
 
-        // Überprüfen, ob das Spiel vorbei ist
-        const winPattern = checkWin();
-        if (winPattern) {
-            drawWinLine(winPattern);
-        } else {
-            // Wechseln zum nächsten Spieler
-            currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+//         // Überprüfen, ob das Spiel vorbei ist
+//         const winPattern = checkWin();
+//         if (winPattern) {
+//             drawWinLine(winPattern);
+//         } else {
+//             // Wechseln zum nächsten Spieler
+//             currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+//         }
+//     }
+// }
+
+
+function handleClick(cell, index) {
+    if (fields[index] === null) {
+        fields[index] = currentPlayer;
+        cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
+        cell.onclick = null;
+        currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
+        
+        if (isGameFinished()) {
+            const winCombination = getWinningCombination();
+            drawWinningLine(winCombination);
         }
     }
+}
+
+function isGameFinished() {
+    return fields.every((field) => field !== null) || getWinningCombination() !== null;
+}
+
+
+function getWinningCombination() {
+    for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
+        const [a, b, c] = WINNING_COMBINATIONS[i];
+        if (fields[a] === fields[b] && fields[b] === fields[c] && fields[a] !== null) {
+            return WINNING_COMBINATIONS[i];
+        }
+    }
+    return null;
 }
 
 
@@ -91,6 +122,7 @@ function render() {
     const container = document.getElementById('content');
 
     // Erstellen des HTML-Codes für die Tabelle
+    //funktioniert noch nicht!!!
     let tableHtml = '<table id="board">';
     for (let i = 0; i < 3; i++) {
         tableHtml += '<tr>';
@@ -98,7 +130,7 @@ function render() {
             const index = i * 3 + j;
             tableHtml += `<td id="cell-${index}" class="${fields[index] || ''}"`;
             if (fields[index] === null) {
-                tableHtml += ` onclick="handleCellClick(${index})"`;
+                tableHtml += ` onclick="handleClick(${index})"`;
             }
             tableHtml += '>';
             if (fields[index] === 'circle') {
