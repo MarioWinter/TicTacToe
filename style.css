@@ -1,45 +1,44 @@
 #content{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80%;
-    position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
+
 
 /* Setzen der Hintergrundfarbe der gesamten Seite auf #323232 */
 body {
-    background-color: #323232;
-    font-family: 'Open Sans', sans-serif; /* Schriftart auf Open Sans setzen */
-    margin: 0;
-    color: white;
+  background-color: #323232;
+  font-family: 'Open Sans', sans-serif; /* Schriftart auf Open Sans setzen */
+  margin: 0;
+  color: white;
 }
 
-h1 {
-    height: 20%;
-}
 
 .container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
+
 
 /* Stil für die Tabelle */
 table {
-    border-collapse: collapse; /* Trennlinien innerhalb der Tabelle */
+  border-collapse: collapse; /* Trennlinien innerhalb der Tabelle */
 }
+
 
 /* Stil für die Tabellelemente (Zellen) */
 td {
-    width: 100px;
-    height: 100px;
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    border: 0; /* Keine äußeren Border für die Zellen */
-    cursor: pointer;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  border: 0; /* Keine äußeren Border für die Zellen */
+  cursor: pointer;
 }
 
 
@@ -58,3 +57,38 @@ table tr:last-child td {
 table tr td:last-child {
   border-right: 0;
 }
+
+.mb-32 {
+  margin-bottom: 32px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  background-color: transparent;
+  color: white;
+  border: 2px solid rgb(89,70,207); /* Lila Rand */
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 125ms ease-in-out, box-shadow 125ms ease-in-out; /* Übergangseffekte für Rand und Schatten */
+  
+  /* Leichter Glow-Effekt (Innenschatten) */
+  box-shadow: inset 0 0 10px rgba(89,70,207, 0.7);
+}
+
+button:hover {
+  background-color: rgb(89,70,207); /* Lila Hintergrund */
+  box-shadow: inset 0 0 10px rgba(255,255,255, 0.2);
+}
+
+
+button:focus {
+  outline: none; /* Entfernt den standardmäßigen Focus-Rahmen */
+}
+

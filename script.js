@@ -26,14 +26,18 @@ function init() {
 
 function handleClick(cell, index) {
     if (fields[index] === null) {
+        //der momentane Spieler wird der geklickten array Position zugewiesen
         fields[index] = currentPlayer;
+        //Es wird ein Kreis oder ein Kreuz gesetzt
         cell.innerHTML = currentPlayer === 'circle' ? generateCircleSVG() : generateCrossSVG();
+        //das Klicken auf die Zelle wird entfernt
         cell.onclick = null;
+        //der Spieler wird gewechselt
         currentPlayer = currentPlayer === 'circle' ? 'cross' : 'circle';
         
-        if (isGameFinished()) {
-            const winCombination = getWinningCombination();
-            drawWinningLine(winCombination);
+        if (isGameFinished()) { // es wird geprüft ob das Spiel fertig ist
+            const winCombination = getWinningCombination(); // es wird die Gewinner Kombination zurück gegeben
+            drawWinningLine(winCombination); // Es wird die Gewinner Linie gezogen
         }
     }
 }
@@ -82,37 +86,35 @@ function getWinningCombination() {
 function generateCircleSVG() {
     const width = 70;
     const height = 70;
-    const color = "#00B0EF";
+    const color = "rgb(89,70,207)";
 
-    const svgCode = `
-        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="${width / 2}" cy="${height / 2}" r="${Math.min(width, height) / 2 - 5}" fill="none" stroke="${color}" stroke-width="10">
-                <animate attributeName="r" begin="0s" dur="200ms" values="0;${Math.min(width, height) / 2 - 5}" calcMode="linear" repeatCount="1" />
-            </circle>
-        </svg>
-    `;
-
-    return svgCode;
+    return `
+    <svg width="${width}" height="${height}">
+        <circle cx="35" cy="35" r="30" stroke="${color}" stroke-width="10" fill="none">
+            <animate attributeName="stroke-dasharray" from="0 188.5" to="188.5 0" dur="0.2s" fill="freeze" />
+        </circle>
+    </svg>`;
 }
+
 
 function generateCrossSVG() {
-    const width = 50;
-    const height = 50;
-    const color = "#FFC000";
-
-    const svgCode = `
-        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-            <line x1="0" y1="0" x2="${width}" y2="${height}" stroke="${color}" stroke-width="10" stroke-dasharray="${Math.sqrt(width * width + height * height)} 0" stroke-linecap="round">
-                <animate attributeName="stroke-dasharray" begin="0s" dur="200ms" values="0 ${Math.sqrt(width * width + height * height)};${Math.sqrt(width * width + height * height)} ${Math.sqrt(width * width + height * height)}" calcMode="linear" repeatCount="1" />
-            </line>
-            <line x1="0" y1="${height}" x2="${width}" y2="0" stroke="${color}" stroke-width="10" stroke-dasharray="${Math.sqrt(width * width + height * height)} 0" stroke-linecap="round">
-                <animate attributeName="stroke-dasharray" begin="0s" dur="200ms" values="0 ${Math.sqrt(width * width + height * height)};${Math.sqrt(width * width + height * height)} ${Math.sqrt(width * width + height * height)}" calcMode="linear" repeatCount="1" />
-            </line>
-        </svg>
+    const color = '#FFC000';
+    const width = 70;
+    const height = 70;
+    return `
+    <svg width="${width}" height="${height}">
+        <line x1="0" y1="0" x2="${width}" y2="${height}" stroke="${color}" stroke-width="10">
+            <animate attributeName="x2" values="0;${width}" dur="200ms" />
+            <animate attributeName="y2" values="0;${height}" dur="200ms" />
+        </line>
+        <line x1="${width}" y1="0" x2="0" y2="${height}" stroke="${color}" stroke-width="10">
+            <animate attributeName="x2" values="${width};0" dur="200ms" />
+            <animate attributeName="y2" values="0;${height}" dur="200ms" />
+        </line>
+    </svg>
     `;
-
-    return svgCode;
-}
+  }
+  
 
 
 function drawWinningLine(pattern) {
@@ -143,4 +145,22 @@ function drawWinningLine(pattern) {
         // Füge das SVG-Element vor dem ersten Kind von "board" ein
         container.insertBefore(svg, container.firstChild);
     }
+}
+
+
+function restartGame() {
+    fields = [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+    ];
+    currentPlayer = 'circle';
+    document.getElementById('content').innerHTML = "";
+    render();
 }
